@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+if [ -t 0 ]; then
+	if [ -n "$1" ]; then
+		if [ -f "$1" ]; then
+			echo "#EXTM3U"
+			tac "$1" | grep -Ei "(File|Title|Length)[0-9]*" | sed 's/[Ff]ile[0-9]*\=//g; s/[Ll]ength[0-9]*\=/\#EXTINF:/g; s/[Tt]itle[0-9]*\=/,/g' | sed  'N;N;s/\n,/,/g;'
+		else
+			echo "This file does not exist"
+		fi
+	else
+		echo "No file name specified"
+	fi
+else
+	echo "#EXTM3U"
+	tac - | grep -Ei "(File|Title|Length)[0-9]*" | sed 's/[Ff]ile[0-9]*\=//g; s/[Ll]ength[0-9]*\=/\#EXTINF:/g; s/[Tt]itle[0-9]*\=/,/g' | sed  'N;N;s/\n,/,/g;'
+fi
